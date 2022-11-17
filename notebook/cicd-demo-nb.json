@@ -1,0 +1,71 @@
+{
+	"name": "cicd-demo-nb",
+	"properties": {
+		"nbformat": 4,
+		"nbformat_minor": 2,
+		"bigDataPool": {
+			"referenceName": "sparkpoolv31",
+			"type": "BigDataPoolReference"
+		},
+		"sessionProperties": {
+			"driverMemory": "56g",
+			"driverCores": 8,
+			"executorMemory": "56g",
+			"executorCores": 8,
+			"numExecutors": 2,
+			"conf": {
+				"spark.dynamicAllocation.enabled": "false",
+				"spark.dynamicAllocation.minExecutors": "2",
+				"spark.dynamicAllocation.maxExecutors": "2",
+				"spark.autotune.trackingId": "cebb81a3-d39b-4da3-af95-95c0ea5c4b69"
+			}
+		},
+		"metadata": {
+			"saveOutput": true,
+			"enableDebugMode": false,
+			"kernelspec": {
+				"name": "synapse_pyspark",
+				"display_name": "python"
+			},
+			"language_info": {
+				"name": "python"
+			},
+			"a365ComputeOptions": {
+				"id": "/subscriptions/687f03ea-b265-4c5d-a6c6-926e951ee79a/resourceGroups/geir-synapse-dev/providers/Microsoft.Synapse/workspaces/gf-synapse-cicd-demo-ws-dev/bigDataPools/sparkpoolv31",
+				"name": "sparkpoolv31",
+				"type": "Spark",
+				"endpoint": "https://gf-synapse-cicd-demo-ws-dev.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/sparkpoolv31",
+				"auth": {
+					"type": "AAD",
+					"authResource": "https://dev.azuresynapse.net"
+				},
+				"sparkVersion": "3.1",
+				"nodeCount": 10,
+				"cores": 8,
+				"memory": 56,
+				"automaticScaleJobs": false
+			},
+			"sessionKeepAliveTimeout": 30
+		},
+		"cells": [
+			{
+				"cell_type": "code",
+				"source": [
+					"from azureml.opendatasets import PublicHolidays\r\n",
+					"\r\n",
+					"from datetime import datetime\r\n",
+					"from dateutil import parser\r\n",
+					"from dateutil.relativedelta import relativedelta\r\n",
+					"\r\n",
+					"end_date = datetime.today()\r\n",
+					"start_date = datetime.today() - relativedelta(months=6)\r\n",
+					"hol = PublicHolidays(start_date=start_date, end_date=end_date)\r\n",
+					"hol_df = ho.to_spark_dataframe()\r\n",
+					"\r\n",
+					"ho._df.write.parquet('data/holidaydata/, mode = 'overwrite')"
+				],
+				"execution_count": null
+			}
+		]
+	}
+}
