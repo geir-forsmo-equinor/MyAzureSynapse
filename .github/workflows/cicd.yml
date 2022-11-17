@@ -1,7 +1,7 @@
 name: default-environment-variables
 
 on: [push]
-
+ 
 jobs:
     sample-job:
         name: Synapse CD
