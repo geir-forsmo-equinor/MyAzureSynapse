@@ -2,9 +2,6 @@ name: default-environment-variables
 
 on: [push]
 
- # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
-
 jobs:
     name : sample-job
         runs-on: ubuntu-latest
