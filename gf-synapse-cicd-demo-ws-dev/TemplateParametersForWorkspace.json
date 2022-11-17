@@ -1,0 +1,15 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"workspaceName": {
+			"value": "gf-synapse-cicd-demo-ws-dev"
+		},
+		"gf-synapse-cicd-demo-ws-dev-WorkspaceDefaultSqlServer_connectionString": {
+			"value": ""
+		},
+		"gf-synapse-cicd-demo-ws-dev-WorkspaceDefaultStorage_properties_typeProperties_url": {
+			"value": "https://gfsynapsecicddemoadlsdev.dfs.core.windows.net"
+		}
+	}
+}
