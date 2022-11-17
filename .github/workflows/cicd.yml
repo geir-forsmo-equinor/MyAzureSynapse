@@ -3,17 +3,38 @@ name: default-environment-variables
 on: [push]
 
 jobs:
-    name : sample-job
+    sample-job:
+        name: Synapse CD
         runs-on: ubuntu-latest
+        if: github.event_name == 'push'
+        environment: ${GITHUB_REF##*/}
+        
         steps:
-            - name: echo-default-env-variables
+        
+            - name: Checkout local
+              uses: actions/checkout@v2
+              
+            - name: Stop Synapse Triggers
               run: |
-                  echo "Home: ${HOME}"
-                  echo "GITHUB_WORKFLOW: ${GITHUB_WORKFLOW}"
-                  echo "GITHUB_ACTIONS: ${GITHUB_ACTIONS}"
-                  echo "GITHUB_ACTOR: ${GITHUB_ACTOR}"
-                  echo "GITHUB_REPOSITORY: ${GITHUB_REPOSITORY}"
-                  echo "GITHUB_EVENT_NAME: ${GITHUB_EVENT_NAME}"
-                  echo "GITHUB_WORKSPACE: ${GITHUB_WORKSPACE}"
-                  echo "GITHUB_SHA: ${GITHUB_SHA}"
-                  echo "GITHUB_REF: ${GITHUB_REF##*/}"
+                az synapse trigger stop --name "TriggerName" --workspace-name "${{ secrets.WORKSPACE }}"
+            - name: Synapse workspace deployment
+              uses: Azure/Synapse-workspace-deployment@V1.7.0
+              with:
+                  TargetWorkspaceName: '${{ secrets.WORKSPACE }}'
+                  TemplateFile: './TemplateForWorkspace.json'
+                  DeleteArtifactsNotInTemplate: true
+                  ParametersFile: './TemplateParametersForWorkspace.json'
+                  environment: 'Azure Public'
+                  resourceGroup: '${{ secrets.RESOURCE_GROUP}}'
+                  clientId: ${{ secrets.CLIENT_ID }}
+                  clientSecret: ${{ secrets.CLIENT_SECRET }}
+                  subscriptionId: ${{ secrets.SUB_ID }}
+                  tenantId: ${{ secrets.TENANT_ID }}
+                  operation: 'deploy'
+                  
+            - name: Start Synapse Triggers
+              run: |
+                az synapse trigger start --name "TriggerName" --workspace-name "${{ secrets.WORKSPACE }}"
+                
+                
+                
